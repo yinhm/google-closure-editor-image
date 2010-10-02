@@ -17,14 +17,14 @@ There are two ways to using this plugin, one was:
 
  * copy editor/* to closure/goog/editor/plugins/
  * update closure/goog/deps.js
- * edit closure/goog/editor/command, add image plugin
+ * edit closure/goog/editor/command, add image plugin:
 
     goog.editor.Command = {
                         ....
                         IMAGE: 'ImageDialogPlugin'
     }
 
- * require and register your plugin just like the others
+ * require and register your plugin just like the others:
 
     goog.require('goog.editor.plugins.ImageBubble');
     goog.require('goog.editor.plugins.ImageDialogPlugin');
@@ -46,7 +46,7 @@ Assume your dir placed like:
 In your html:
 
     <script src="closure/closure/goog/base.js" type="text/javascript"></script> 
-    <script src="closure-Amiga/deps.js type="text/javascript"></script>
+    <script src="closure-closure-image-plugin/deps.js type="text/javascript"></script>
 
 Then require and register your plugin just like above, the difference is you
 need to set Command.IMAGE to ImageDialogPlugin:
@@ -85,8 +85,8 @@ upload form, eg, you want to append a hidden token value to the form.
 
 ## Thanks
 
-This plugin influenced by the following:
+This plugin influenced by the followings:
 
- * shripadk's google-closure-image-plugin - http://github.com/shripadk/google-closure-image-plugin/
+ * [[http://github.com/shripadk/google-closure-image-plugin/ | shripadk's google-closure-image-plugin]]
  * closure link plugin
 
