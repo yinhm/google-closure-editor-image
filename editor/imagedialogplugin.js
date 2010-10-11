@@ -18,7 +18,6 @@
  */
 
 goog.provide('goog.editor.plugins.ImageDialogPlugin');
-goog.provide('goog.editor.plugins.ImageDialogPlugin.Command');
 
 goog.require('goog.dom.TagName');
 goog.require('goog.editor.plugins.AbstractDialogPlugin');

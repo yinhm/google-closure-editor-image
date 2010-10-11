@@ -116,7 +116,6 @@ imigu.editor = function(id, config) {
     goog.editor.Command.JUSTIFY_RIGHT,
     goog.editor.Command.REMOVE_FORMAT
   ];
-  goog.editor.Command.IMAGE = 'ImageDialogPlugin';
 
   var myToolbar =
     goog.ui.editor.DefaultToolbar.makeToolbar(buttons,
