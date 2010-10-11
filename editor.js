@@ -6,7 +6,6 @@
 goog.provide('imigu.editor');
 
 goog.require('goog.dom');
-goog.require('goog.dom.query');
 goog.require('goog.editor.Command');
 goog.require('goog.editor.Field');
 goog.require('goog.editor.plugins.BasicTextFormatter');

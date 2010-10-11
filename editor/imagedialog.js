@@ -22,7 +22,6 @@ goog.provide('goog.editor.plugins.ImageDialog.OkEvent');
 
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
-goog.require('goog.dom.query');
 goog.require('goog.editor.BrowserFeature');
 goog.require('goog.editor.focus');
 goog.require('goog.events.ActionHandler');
@@ -481,7 +480,7 @@ goog.editor.plugins.ImageDialog.prototype.syncOkButton_ = function() {
 goog.editor.plugins.ImageDialog.prototype.getUploadedImage_ = function() {
   var tabId = goog.editor.plugins.ImageDialog.Id_.UPLOAD_TAB + goog.editor.plugins.ImageDialog.Id_.TAB_SUFFIX;
   var currTab = this.dom.getElement(tabId);
-  var images = goog.dom.query('img', currTab);
+  var images = goog.dom.getElementsByTagNameAndClass('img', null, currTab); 
 
   return images.length > 0 ? images[0] : undefined;
 };
