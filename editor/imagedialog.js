@@ -331,6 +331,11 @@ goog.editor.plugins.ImageDialog.prototype.buildTabUpload_ = function() {
        action: this.config_.actionUrl,
        enctype: 'multipart/form-data',
        onsubmit: 'return false'});
+
+  fileForm.encoding = 'multipart/form-data'; // fix for IE
+
+  console.log(fileForm)
+
   if (this.config_.extraCode) {
     var extraCodeDiv = this.dom.createDom(goog.dom.TagName.DIV, {});
     extraCodeDiv.innerHTML = this.config_.extraCode;
@@ -367,10 +372,10 @@ goog.editor.plugins.ImageDialog.prototype.onUrlInputChange_ = function() {
  * @private
  */
 goog.editor.plugins.ImageDialog.prototype.onFileInputChange_ = function() {
-  form = this.dom.getElement(goog.editor.plugins.ImageDialog.Id_.UPLOAD_FORM);
+  var form = this.dom.getElement(goog.editor.plugins.ImageDialog.Id_.UPLOAD_FORM);
 
   // starting upload
-  var io = new goog.net.IframeIo;
+  var io = new goog.net.IframeIo();
   this.eventHandler_.listen(io, goog.net.EventType.SUCCESS,
                             this.onFileUploadSuccess_);
   this.eventHandler_.listen(io, goog.net.EventType.ERROR,
