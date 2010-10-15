@@ -334,8 +334,6 @@ goog.editor.plugins.ImageDialog.prototype.buildTabUpload_ = function() {
 
   fileForm.encoding = 'multipart/form-data'; // fix for IE
 
-  console.log(fileForm)
-
   if (this.config_.extraCode) {
     var extraCodeDiv = this.dom.createDom(goog.dom.TagName.DIV, {});
     extraCodeDiv.innerHTML = this.config_.extraCode;
