@@ -19,12 +19,18 @@ There are two ways to using this plugin, one was:
  * update closure/goog/deps.js
  * edit closure/goog/editor/command, add image plugin:
 
+```javascript
+
     goog.editor.Command = {
                         ....
                         IMAGE: 'ImageDialogPlugin'
     }
 
+```
+
  * require and register your plugin just like the others:
+
+```javascript
 
       goog.require('goog.editor.plugins.ImageBubble');
       goog.require('goog.editor.plugins.ImageDialogPlugin');
@@ -44,6 +50,8 @@ There are two ways to using this plugin, one was:
       var myToolbar =
         goog.ui.editor.DefaultToolbar.makeToolbar(buttons,
                                                   goog.dom.getElement(toolbarId));
+
+```
 
 
 ### Or if you want to make upstream closure clean
@@ -81,13 +89,47 @@ upload form, eg, you want to append a hidden token value to the form.
     ...
     trogField.registerPlugin(new goog.editor.plugins.ImageDialogPlugin(config));
 
-## upload returns
+## Server side returns
+
+This should return from the server side(eg: Python, Rails, PHP), the returned JSON format should as the followings:
 
     // on succcess
     {"status": 0, "imageUrl": "http://youdomain/foo.png"}
 
     // on error
     {"status": 1, "errorMsg": "Upload failed!"}
+
+
+A Rails example:
+
+
+```ruby
+
+  def upload
+    begin
+      if params[:file].nil?
+        raise StandardError.new('Unknown file.')
+      end
+
+      media = Media.new(:media => params[:file])
+      media.save!
+
+      ret = {
+        :status => 0,
+        :imageUrl => media.url
+      }
+    rescue => e
+      ret = {
+        :status => 1,
+        :errorMsg => e.message
+      }
+    end
+    
+    render :text => ret.to_json, :layout => false, :content_type => 'application/json'
+  end
+
+```
+
 
 ## TODO
 
