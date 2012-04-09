@@ -57,6 +57,13 @@ goog.editor.plugins.ImageBubble.CHANGE_IMAGE_ID_ = 'tr_change-image';
 
 
 /**
+ * Element id of the delete image spam.
+ * type {string}
+ * @private
+ */
+goog.editor.plugins.ImageBubble.DELETE_IMAGE_SPAN_ID_ = 'tr_delete-image-span';
+
+/**
  * Element id for the delete image.
  * type {string}
  * @private
@@ -154,7 +161,7 @@ goog.editor.plugins.ImageBubble.prototype.createBubbleContents = function(
       MSG_IMAGE_BUBBLE_CHANGE, this.showImageDialog_, changeImageSpan);
 
   var removeImageSpan = this.createLinkOption(
-      goog.editor.plugins.ImageBubble.DELETE_IMAGE_SPAN_ID_);
+    goog.editor.plugins.ImageBubble.DELETE_IMAGE_SPAN_ID_);
   this.createLink(goog.editor.plugins.ImageBubble.DELETE_IMAGE_ID_,
       MSG_IMAGE_BUBBLE_REMOVE, this.deleteImage_, removeImageSpan);
 

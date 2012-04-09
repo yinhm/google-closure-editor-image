@@ -48,7 +48,7 @@ goog.require('goog.ui.editor.ToolbarController');
  *
  *
  * @param {string} id of content textarea container.
- * @param {string} config Image upload configs, must supply an actionUrl for image upload, see example.
+ * @param {Object} config Image upload configs, must supply an actionUrl for image upload, see example.
  */
 imigu.editor = function(id, config) {
   function updateFieldContents() {
@@ -117,8 +117,7 @@ imigu.editor = function(id, config) {
   ];
 
   var myToolbar =
-    goog.ui.editor.DefaultToolbar.makeToolbar(buttons,
-                                              goog.dom.getElement(toolbarId));
+    goog.ui.editor.DefaultToolbar.makeToolbar(buttons, toolbar);
 
   // Hook the toolbar into the field.
   var myToolbarController =

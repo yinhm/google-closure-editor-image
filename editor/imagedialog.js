@@ -30,6 +30,7 @@ goog.require('goog.events.Event');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventType');
 goog.require('goog.json');
+goog.require('goog.net.EventType');
 goog.require('goog.net.IframeIo');
 goog.require('goog.string');
 goog.require('goog.ui.editor.AbstractDialog');
@@ -37,6 +38,7 @@ goog.require('goog.ui.editor.AbstractDialog.Builder');
 goog.require('goog.ui.editor.AbstractDialog.EventType');
 goog.require('goog.ui.editor.TabPane');
 goog.require('goog.ui.editor.messages');
+
 
 
 // *** Public interface ***************************************************** //
@@ -206,22 +208,14 @@ goog.editor.plugins.ImageDialog.prototype.disposeInternal = function() {
 };
 
 
+// *** Private implementation *********************************************** //
+
 /**
  * Config of the image dialog.
  * @type {Object}
  * @private
  */
-goog.editor.plugins.ImageDialog.prototype.config_;
-
-
-// *** Private implementation *********************************************** //
-
-/**
- * Input element where the user will type their Image URL.
- * @type {Element}
- * @private
- */
-goog.editor.plugins.ImageDialog.prototype.input_;
+goog.editor.plugins.ImageDialog.prototype.config_ = {};
 
 
 /**
@@ -229,7 +223,7 @@ goog.editor.plugins.ImageDialog.prototype.input_;
  * @type {HTMLImageElement}
  * @private
  */
-goog.editor.plugins.ImageDialog.prototype.image_;
+goog.editor.plugins.ImageDialog.prototype.image_ = null;
 
 
 /**
@@ -306,7 +300,7 @@ goog.editor.plugins.ImageDialog.prototype.buildTabOnTheWeb_ = function() {
 goog.editor.plugins.ImageDialog.prototype.buildTabUpload_ = function() {
   var uploadDiv = this.dom.createElement(goog.dom.TagName.DIV);
 
-  if (goog.typeOf(this.config_.actionUrl) == 'undefined') {
+  if (goog.typeOf(this.config_['actionUrl']) == 'undefined') {
     return uploadDiv;
   }
 
@@ -328,15 +322,15 @@ goog.editor.plugins.ImageDialog.prototype.buildTabUpload_ = function() {
   var fileForm = this.dom.createDom(goog.dom.TagName.FORM,
       {id: goog.editor.plugins.ImageDialog.Id_.UPLOAD_FORM,
        method: 'post',
-       action: this.config_.actionUrl,
+       action: this.config_['actionUrl'],
        enctype: 'multipart/form-data',
        onsubmit: 'return false'});
 
   fileForm.encoding = 'multipart/form-data'; // fix for IE
 
-  if (this.config_.extraCode) {
+  if (this.config_['extraCode']) {
     var extraCodeDiv = this.dom.createDom(goog.dom.TagName.DIV, {});
-    extraCodeDiv.innerHTML = this.config_.extraCode;
+    extraCodeDiv.innerHTML = this.config_['extraCode'];
     fileForm.appendChild(extraCodeDiv);
   }
   fileForm.appendChild(fileInput);
@@ -344,6 +338,8 @@ goog.editor.plugins.ImageDialog.prototype.buildTabUpload_ = function() {
   goog.style.setStyle(fileForm, 'width', '98%');
   goog.style.setStyle(table.rows[0].cells[1], 'width', '100%');
   goog.dom.appendChild(table.rows[0].cells[1], fileForm);
+
+  this.form_ = fileForm;
 
   this.eventHandler_.listen(fileInput,
                             goog.events.EventType.CHANGE,
@@ -370,21 +366,19 @@ goog.editor.plugins.ImageDialog.prototype.onUrlInputChange_ = function() {
  * @private
  */
 goog.editor.plugins.ImageDialog.prototype.onFileInputChange_ = function() {
-  var form = this.dom.getElement(goog.editor.plugins.ImageDialog.Id_.UPLOAD_FORM);
-
   // starting upload
   var io = new goog.net.IframeIo();
   this.eventHandler_.listen(io, goog.net.EventType.SUCCESS,
                             this.onFileUploadSuccess_);
   this.eventHandler_.listen(io, goog.net.EventType.ERROR,
                             this.onFileUploadError_);
-  io.sendFromForm(form);
+  io.sendFromForm(this.form_);
 };
 
 
 /**
  * Called when image succcess uploaded.
- * @param {goog.net.EventType.SUCCESS} e The net event object.
+ * @param {goog.events.Event} e The net event object.
  * @private
  */
 goog.editor.plugins.ImageDialog.prototype.onFileUploadSuccess_ = function(e) {
@@ -392,18 +386,18 @@ goog.editor.plugins.ImageDialog.prototype.onFileUploadSuccess_ = function(e) {
   var currTab = document.getElementById(tabId);
 
   var io = e.target;
-  var json = io.getResponseJson();
-  if (json.status == 0) {
+  var rspJson = /** @type {Object} **/ io.getResponseJson();
+  if (rspJson['status'] === 0) {
     var uploadedImage = this.dom.createDom(goog.dom.TagName.IMG,
                                            { id: 'uploaded-image',
-                                             src: json.imageUrl});
+                                             src: rspJson['imageUrl']});
     this.dom.appendChild(currTab, uploadedImage);
     this.syncOkButton_();
     this.processOkAndClose();
   } else {
     var errorMsg = this.dom.createDom(goog.dom.TagName.SPAN,
                                       { style: 'color: red;'},
-                                      this.dom.createTextNode(json.errorMsg));
+                                      this.dom.createTextNode(rspJson['errorMsg']));
     this.dom.appendChild(currTab, errorMsg);
   }
 };
@@ -411,7 +405,7 @@ goog.editor.plugins.ImageDialog.prototype.onFileUploadSuccess_ = function(e) {
 
 /**
  * Called when image upload failed.
- * @param {goog.net.EventType.ERROR} e The net event object.
+ * @param {goog.events.Event} e The net event object.
  * @private
  */
 goog.editor.plugins.ImageDialog.prototype.onFileUploadError_ = function(e) {
@@ -461,14 +455,15 @@ goog.editor.plugins.ImageDialog.prototype.onChangeTab_ = function(e) {
  */
 goog.editor.plugins.ImageDialog.prototype.syncOkButton_ = function() {
   var inputValue;
+  var imageURL;
   if (this.tabPane_.getCurrentTabId() ==
       goog.editor.plugins.ImageDialog.Id_.ON_WEB_TAB) {
     imageURL = this.dom.getElement(
-        goog.editor.plugins.ImageDialog.Id_.ON_WEB_INPUT).value;
+      goog.editor.plugins.ImageDialog.Id_.ON_WEB_INPUT).value;
   } else if (this.tabPane_.getCurrentTabId() ==
       goog.editor.plugins.ImageDialog.Id_.UPLOAD_TAB) {
     var image = this.getUploadedImage_();
-    var imageURL = typeof image == 'undefined' ? '' : image.getAttribute('src');
+    imageURL = typeof image == 'undefined' ? '' : image.getAttribute('src');
   } else {
     return;
   }
@@ -483,7 +478,7 @@ goog.editor.plugins.ImageDialog.prototype.syncOkButton_ = function() {
 goog.editor.plugins.ImageDialog.prototype.getUploadedImage_ = function() {
   var tabId = goog.editor.plugins.ImageDialog.Id_.UPLOAD_TAB + goog.editor.plugins.ImageDialog.Id_.TAB_SUFFIX;
   var currTab = this.dom.getElement(tabId);
-  var images = goog.dom.getElementsByTagNameAndClass('img', null, currTab); 
+  var images = goog.dom.getElementsByTagNameAndClass('img', null, currTab);
 
   return images.length > 0 ? images[0] : undefined;
 };

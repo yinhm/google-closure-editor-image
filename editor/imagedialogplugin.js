@@ -45,7 +45,7 @@ goog.inherits(goog.editor.plugins.ImageDialogPlugin,
 
 /** @inheritDoc */
 goog.editor.plugins.ImageDialogPlugin.prototype.getTrogClassId =
-    goog.functions.constant('ImageDialogPlugin');
+  goog.functions.constant('ImageDialogPlugin');
 
 
 // *** Protected interface ************************************************** //
@@ -55,7 +55,7 @@ goog.editor.plugins.ImageDialogPlugin.prototype.getTrogClassId =
  * Creates a new instance of the dialog and registers for the relevant events.
  * @param {goog.dom.DomHelper} dialogDomHelper The dom helper to be used to
  *     create the dialog.
- * @param {HTMLImageElement} image The source image if exists.
+ * @param {*} image The source image if exists.
  * @return {goog.editor.plugins.ImageDialog} The dialog.
  * @override
  * @protected
@@ -63,7 +63,7 @@ goog.editor.plugins.ImageDialogPlugin.prototype.getTrogClassId =
 goog.editor.plugins.ImageDialogPlugin.prototype.createDialog = function(
   dialogDomHelper, image) {
   var dialog = new goog.editor.plugins.ImageDialog(dialogDomHelper,
-                                                   (image));
+                 /** @type {HTMLImageElement} */ (image));
   if (this.config_) {
     dialog.setConfig(this.config_);
   }
