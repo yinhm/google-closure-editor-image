@@ -50,7 +50,6 @@ goog.editor.plugins.ImageDialogPlugin.prototype.getTrogClassId =
 
 // *** Protected interface ************************************************** //
 
-
 /**
  * Creates a new instance of the dialog and registers for the relevant events.
  * @param {goog.dom.DomHelper} dialogDomHelper The dom helper to be used to
