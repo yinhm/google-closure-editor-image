@@ -78,6 +78,11 @@ var MSG_IMAGE_DIALOG = goog.getMsg('Add an image');
 var MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB = goog.getMsg('My Computer');
 
 /**
+ * @desc Tip for image upload tab.
+ */
+var MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB_TIP = goog.getMsg('Upload image from my computer');
+
+/**
  * @desc Text label for image upload.
  */
 var MSG_IMAGE_DIALOG_UPLOAD_INPUT = goog.getMsg('Upload an image: ');
@@ -154,7 +159,7 @@ goog.editor.plugins.ImageDialog.prototype.createDialogControl = function() {
   this.tabPane_ = new goog.ui.editor.TabPane(this.dom);
   this.tabPane_.addTab(goog.editor.plugins.ImageDialog.Id_.UPLOAD_TAB,
       MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB,
-      '',
+      MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB_TIP,
       this.buildTabUpload_());
   this.tabPane_.addTab(goog.editor.plugins.ImageDialog.Id_.ON_WEB_TAB,
       goog.ui.editor.messages.MSG_ON_THE_WEB,
