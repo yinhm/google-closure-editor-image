@@ -80,6 +80,15 @@ goog.editor.plugins.ImageBubble.IMAGE_DIV_ID_ = 'tr_image-div';
 
 
 /**
+ * The css class name of option link elements.
+ * @type {string}
+ * @private
+ */
+goog.editor.plugins.ImageBubble.OPTION_LINK_CLASSNAME_ =
+  goog.getCssName('tr_option-link');
+
+
+/**
  * @desc Label that pops up a bubble caption.
  */
 var MSG_IMAGE_BUBBLE = goog.getMsg('Add an image');
@@ -123,7 +132,7 @@ goog.editor.plugins.ImageBubble.prototype.getBubbleTargetFromSelection =
     // selected element = range.getContainerElement().  Right now this is true,
     // but attempts to re-use this method for other purposes could cause issues.
     // TODO(robbyw): Refactor this method to also take a range, and use that.
-    var range = this.fieldObject.getRange();
+    var range = this.getFieldObject().getRange();
     if (range && range.isCollapsed() && range.getStartOffset() == 0) {
       var startNode = range.getStartNode();
       var previous = startNode.previousSibling;
@@ -155,7 +164,7 @@ goog.editor.plugins.ImageBubble.prototype.createBubbleContents = function(
 
   var changeImageSpan = this.dom_.createDom(goog.dom.TagName.SPAN,
       { id: goog.editor.plugins.ImageBubble.CHANGE_IMAGE_SPAN_ID_,
-        className: goog.editor.plugins.AbstractBubblePlugin.OPTION_LINK_CLASSNAME_});
+        className: goog.editor.plugins.ImageBubble.OPTION_LINK_CLASSNAME_});
 
   this.createLink(goog.editor.plugins.ImageBubble.CHANGE_IMAGE_ID_,
       MSG_IMAGE_BUBBLE_CHANGE, this.showImageDialog_, changeImageSpan);
@@ -194,10 +203,10 @@ goog.editor.plugins.ImageBubble.prototype.getImageToTextObj_ = function() {
  * @private
  */
 goog.editor.plugins.ImageBubble.prototype.deleteImage_ = function() {
-  this.fieldObject.dispatchBeforeChange();
+  this.getFieldObject().dispatchBeforeChange();
   goog.dom.removeNode(this.getTargetElement());
   this.closeBubble();
-  this.fieldObject.dispatchChange();
+  this.getFieldObject().dispatchChange();
 };
 
 
@@ -206,6 +215,6 @@ goog.editor.plugins.ImageBubble.prototype.deleteImage_ = function() {
  * @private
  */
 goog.editor.plugins.ImageBubble.prototype.showImageDialog_ = function() {
-  this.fieldObject.execCommand(goog.editor.Command.IMAGE, this.getTargetElement());
+  this.getFieldObject().execCommand(goog.editor.Command.IMAGE, this.getTargetElement());
   this.closeBubble();
 };

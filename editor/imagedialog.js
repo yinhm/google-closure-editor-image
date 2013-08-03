@@ -158,13 +158,15 @@ goog.editor.plugins.ImageDialog.prototype.createDialogControl = function() {
 
   this.tabPane_ = new goog.ui.editor.TabPane(this.dom);
   this.tabPane_.addTab(goog.editor.plugins.ImageDialog.Id_.UPLOAD_TAB,
-      MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB,
-      MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB_TIP,
-      this.buildTabUpload_());
+                       MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB,
+                       MSG_IMAGE_DIALOG_UPLOAD_INPUT_TAB_TIP,
+                       goog.editor.plugins.ImageDialog.BUTTON_GROUP_,
+                       this.buildTabUpload_());
   this.tabPane_.addTab(goog.editor.plugins.ImageDialog.Id_.ON_WEB_TAB,
-      goog.ui.editor.messages.MSG_ON_THE_WEB,
-      goog.ui.editor.messages.MSG_ON_THE_WEB_TIP,
-      this.buildTabOnTheWeb_());
+                       goog.ui.editor.messages.MSG_ON_THE_WEB,
+                       goog.ui.editor.messages.MSG_ON_THE_WEB_TIP,
+                       goog.editor.plugins.ImageDialog.BUTTON_GROUP_,
+                       this.buildTabOnTheWeb_());
   this.tabPane_.render(content);
 
   this.eventHandler_.listen(this.tabPane_, goog.ui.Component.EventType.SELECT,
@@ -391,7 +393,7 @@ goog.editor.plugins.ImageDialog.prototype.onFileUploadSuccess_ = function(e) {
   var currTab = document.getElementById(tabId);
 
   var io = e.target;
-  var rspJson = /** @type {Object} **/ io.getResponseJson();
+  var rspJson = io.getResponseJson();
   if (rspJson['status'] === 0) {
     var uploadedImage = this.dom.createDom(goog.dom.TagName.IMG,
                                            { id: 'uploaded-image',
@@ -521,3 +523,13 @@ goog.editor.plugins.ImageDialog.Id_ = {
  */
 goog.editor.plugins.ImageDialog.TARGET_INPUT_CLASSNAME_ =
     goog.getCssName('tr-link-dialog-target-input');
+
+
+
+/**
+ * Base name for the radio buttons group.
+ * @type {string}
+ * @private
+ */
+goog.editor.plugins.ImageDialog.BUTTON_GROUP_ = 'imagedialog-buttons';
+
